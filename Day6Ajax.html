@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Ajax Search</title>
+  <link rel="stylesheet" href="./css/ajax.css">
+</head>
+<body>  
+
+  <form class="search-form">
+    <input type="text" class="search" placeholder="Name or No">
+    <ul class="suggestions">
+      <li>Filter Name ,Roll NO</li>
+      <li>Enrollment No</li>
+    </ul>
+  </form>
+<script>
+const endpoint = 'http://127.0.0.1:5500/data.json';
+ const cities = [];
+ fetch(endpoint)
+ .then( blob => blob.json())
+ .then( data => cities.push(...data));
+
+ function searchcity(word,cities)
+ {
+   return cities.filter(place=>{
+     const regex = new RegExp(word,'gi');
+     //console.log(regex);
+     return place.name.match(regex) || place.roll_no.match(regex) 
+   });
+ }
+
+ function matches()
+ {
+   const matcharray = searchcity(this.value,cities);
+   //console.log(matcharray);
+
+   const html = matcharray.map(place => {
+    return '<li><span class="name">'+place.name+',<br>'+place.enroll_no+'</span> <span class="population">'+place.roll_no+'</span></li>';
+   }).join('');
+    suggestions.innerHTML = html;
+    
+ }
+
+ const searchname = document.querySelector('.search');
+ const suggestions = document.querySelector('.suggestions');
+
+ searchname.addEventListener('change',matches);
+ searchname.addEventListener('keyup',matches);
+ 
+</script>
+
+  </body>
+</html>
